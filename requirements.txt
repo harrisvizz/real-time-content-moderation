@@ -1,0 +1,27 @@
+
+# Deep Learning and NLP
+torch
+transformers
+scikit-learn
+
+# ONNX Optimization and Inference
+optimum[onnxruntime]
+onnx
+onnxruntime
+
+# Backend API
+fastapi
+uvicorn
+
+# Frontend
+streamlit
+requests
+
+# Data Processing and Visualization
+numpy
+pandas
+matplotlib
+seaborn
+
+# Dataset Download
+huggingface_hub
