@@ -32,6 +32,26 @@ It analyzes user-submitted comments and identifies potentially harmful categorie
 - Interactive Streamlit user interface.
 - Individual toxicity scores and moderation decisions.
 
+## Application Screenshots
+
+### 1. Main Application Interface
+
+The Streamlit interface allows users to submit comments for real-time toxicity analysis.
+
+![Main Application Interface](screenshots/app_interface.png)
+
+### 2. Toxic Comment Detection
+
+Demonstrates the model identifying potentially harmful content and displaying category-wise toxicity scores and moderation decisions.
+
+![Toxic Comment Detection](screenshots/toxic_detection.png)
+
+### 3. Non-Toxic Comment Detection
+
+Demonstrates how the application analyzes a normal comment and displays its prediction results.
+
+![Non-Toxic Comment Detection](screenshots/non_toxic_detection.png)
+
 ## Toxicity Categories
 
 | Category | Description |
@@ -158,6 +178,11 @@ real-time-content-moderation/
 │   ├── 01_explore_dataset.py
 │   └── 02_visualize_dataset.py
 │
+├── screenshots/
+│   ├── app_interface.png
+│   ├── toxic_detection.png
+│   └── non_toxic_detection.png
+│
 ├── src/
 │   ├── api/
 │   │   └── main.py
@@ -197,14 +222,14 @@ real-time-content-moderation/
 
 ## Installation and Execution
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/harrisvizz/real-time-content-moderation.git
 cd real-time-content-moderation
 ```
 
-### 2. Create a virtual environment
+### 2. Create a Virtual Environment
 
 ```bash
 python -m venv venv
@@ -216,13 +241,13 @@ Activate it on Windows:
 venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Prepare model files
+### 4. Prepare Model Files
 
 The trained V3 model and ONNX model are not included in this GitHub repository because of their size.
 
@@ -240,7 +265,7 @@ outputs/
 
 The V3 model directory must also contain the required tokenizer and model configuration files.
 
-### 5. Start the FastAPI backend
+### 5. Start the FastAPI Backend
 
 ```bash
 python -m uvicorn src.api.main:app --reload
@@ -248,9 +273,9 @@ python -m uvicorn src.api.main:app --reload
 
 API documentation:
 
-http://127.0.0.1:8000/docs
+[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
-### 6. Start the Streamlit frontend
+### 6. Start the Streamlit Frontend
 
 Open another terminal, activate the virtual environment, and run:
 
@@ -258,9 +283,9 @@ Open another terminal, activate the virtual environment, and run:
 python -m streamlit run app.py
 ```
 
-### 7. Open the application
+### 7. Open the Application
 
-http://localhost:8501
+[http://localhost:8501](http://localhost:8501)
 
 ## Moderation Decisions
 
