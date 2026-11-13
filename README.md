@@ -1,45 +1,100 @@
+# AI-Powered Real-Time Content Moderation Using DistilBERT and ONNX Runtime
 
-# AI-Powered Real-Time Content Moderation
+<p align="center">
+  <strong>An NLP-powered system for detecting and flagging harmful social media comments using Deep Learning.</strong>
+</p>
 
-An NLP-based content moderation system that detects toxic comments using a fine-tuned DistilBERT model, optimized with ONNX Runtime and deployed through FastAPI and Streamlit.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.9-blue?logo=python" />
+  <img src="https://img.shields.io/badge/Deep%20Learning-PyTorch-red?logo=pytorch" />
+  <img src="https://img.shields.io/badge/Model-DistilBERT-yellow" />
+  <img src="https://img.shields.io/badge/Inference-ONNX%20Runtime-purple" />
+  <img src="https://img.shields.io/badge/API-FastAPI-green?logo=fastapi" />
+  <img src="https://img.shields.io/badge/Frontend-Streamlit-ff4b4b?logo=streamlit" />
+</p>
 
 ## Project Overview
 
-This project identifies potentially harmful social media comments using multi-label text classification.
+AI-Powered Real-Time Content Moderation is a Natural Language Processing (NLP) application designed to identify potentially harmful content in social media comments.
 
-It detects six categories:
-- Toxic
-- Severe Toxic
-- Obscene
-- Threat
-- Insult
-- Identity Hate
+The system uses a fine-tuned **DistilBERT transformer model** to perform multi-label toxicity classification. The model is optimized using **ONNX Runtime** for faster CPU inference and integrated with a **FastAPI backend** and **Streamlit frontend**.
 
-## Technologies Used
+It analyzes user-submitted comments and identifies potentially harmful categories, helping moderators review inappropriate content.
 
-- Python
-- PyTorch
-- Hugging Face Transformers
-- DistilBERT
-- ONNX Runtime
-- FastAPI
-- Streamlit
-- Scikit-learn
-- Pandas
-- NumPy
+## Key Features
 
-## Model Details
+- Multi-label toxicity classification across six categories.
+- Fine-tuned DistilBERT transformer model.
+- Class-imbalance handling during model training.
+- Per-category decision thresholds.
+- ONNX model export and optimized CPU inference.
+- REST API using FastAPI.
+- Interactive Streamlit user interface.
+- Individual toxicity scores and moderation decisions.
 
-- Base model: distilbert-base-uncased
-- Training dataset: Jigsaw Toxic Comment Classification
-- Training sample: 30,000 comments
-- Training epochs: 1
-- Maximum sequence length: 128
-- Classification: Multi-label
+## Toxicity Categories
+
+| Category | Description |
+|---|---|
+| Toxic | Generally harmful or abusive language |
+| Severe Toxic | Highly aggressive or extremely harmful language |
+| Obscene | Obscene or explicit language |
+| Threat | Threatening language |
+| Insult | Insulting or demeaning language |
+| Identity Hate | Identity-based hateful language |
+
+## Technology Stack
+
+| Area | Technologies |
+|---|---|
+| Programming | Python |
+| Deep Learning | PyTorch |
+| NLP | Hugging Face Transformers |
+| Pre-trained Model | DistilBERT |
+| Data Processing | Pandas, NumPy |
+| Machine Learning | Scikit-learn |
+| Model Optimization | ONNX, ONNX Runtime |
+| Backend | FastAPI, Uvicorn |
+| Frontend | Streamlit |
+| Dataset | Jigsaw Toxic Comment Classification |
+
+## Dataset
+
+The project uses the **Jigsaw Toxic Comment Classification Challenge** dataset.
+
+The dataset contains social media comments labeled across six toxicity categories.
+
+- Original dataset: approximately 159,571 comments.
+- Training sample used for V3: 30,000 comments.
+- Validation sample: 2,000 comments.
+- Classification approach: Multi-label classification.
+
+Dataset source: [Jigsaw Toxic Comment Classification Challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)
+
+## Model Development
+
+The project was developed through three training iterations:
+
+- **V1:** Initial DistilBERT baseline.
+- **V2:** Increased training sample size and introduced positive class weights.
+- **V3:** Expanded training sample to 30,000 comments and evaluated improved classification performance.
+
+### Final Model Configuration
+
+| Parameter | Value |
+|---|---|
+| Base Model | distilbert-base-uncased |
+| Training Samples | 30,000 |
+| Epochs | 1 |
+| Batch Size | 8 |
+| Maximum Sequence Length | 128 |
+| Learning Rate | 2e-5 |
+| Classification | Multi-label |
+| Loss Function | Weighted Binary Cross Entropy |
 
 ## Model Evaluation
 
-V3 test evaluation:
+The V3 model was evaluated on 29,915 test comments.
 
 | Metric | Result |
 |---|---:|
@@ -49,84 +104,198 @@ V3 test evaluation:
 | Micro Recall | 0.8896 |
 | Exact Match Accuracy | 0.8923 |
 
-Note: The test set was used for multiple model comparisons, so these results are not an untouched final benchmark. Rare categories also have limited evaluation support.
+### Category-wise F1 Scores
 
-## ONNX Optimization
+| Toxicity Category | F1 Score |
+|---|---:|
+| Toxic | 0.79 |
+| Severe Toxic | 0.43 |
+| Obscene | 0.76 |
+| Threat | 0.24 |
+| Insult | 0.68 |
+| Identity Hate | 0.46 |
 
-| Runtime | Average inference |
+**Evaluation note:** The test set was used in multiple model comparisons, so it should not be considered an untouched final benchmark. Rare categories also have relatively low positive support, which affects the reliability of their individual metrics.
+
+## ONNX Runtime Optimization
+
+The trained V3 model was exported to ONNX format and tested against the original PyTorch model.
+
+The comparison showed close numerical agreement between the two inference implementations.
+
+### CPU Inference Benchmark
+
+| Runtime | Average Inference Time |
 |---|---:|
 | PyTorch | 17.538 ms |
 | ONNX Runtime | 7.240 ms |
 
-Measured speedup: 2.42x.
+**Measured speedup: 2.42x**
 
-These are preliminary CPU measurements for single-comment inference.
+The benchmark used single-comment inference, with 10 warm-up iterations and 50 measured iterations. These measurements represent model inference time, not complete application response time.
 
-## Application Architecture
+## System Architecture
 
-User Comment
-    |
-    v
-Streamlit Frontend
-    |
-    v
-FastAPI Backend
-    |
-    v
-DistilBERT V3 ONNX Model
-    |
-    v
-Toxicity Scores
-    |
-    v
-Moderation Decisions
+```mermaid
+flowchart TD
+    A[User Comment] --> B[Streamlit Frontend]
+    B --> C[FastAPI Backend]
+    C --> D[Text Tokenization]
+    D --> E[DistilBERT V3 ONNX]
+    E --> F[Sigmoid Probabilities]
+    F --> G[Category Threshold Comparison]
+    G --> H[Toxicity Scores]
+    H --> I[Moderation Decisions]
+    I --> B
+```
 
-## Running the Project
+## Project Structure
 
-### 1. Install dependencies
+```text
+real-time-content-moderation/
+│
+├── notebooks/
+│   ├── 01_explore_dataset.py
+│   └── 02_visualize_dataset.py
+│
+├── src/
+│   ├── api/
+│   │   └── main.py
+│   │
+│   ├── inference/
+│   │   └── 12_test_moderation_pipeline.py
+│   │
+│   ├── preprocessing/
+│   │   ├── 01_preprocess_data.py
+│   │   └── 02_tokenize_data.py
+│   │
+│   └── training/
+│       ├── dataset.py
+│       ├── 01_test_dataloader.py
+│       ├── 02_train_distilbert.py
+│       ├── 03_evaluate_model.py
+│       ├── 04_threshold_analysis.py
+│       ├── 05_per_label_thresholds.py
+│       ├── 06_prepare_test_data.py
+│       ├── 07_final_test_evaluation.py
+│       ├── 08_train_distilbert_v2.py
+│       ├── 09_v2_threshold_analysis.py
+│       ├── 10_v2_test_evaluation.py
+│       ├── 11_v2_precision_thresholds.py
+│       └── 12_analyze_training_distribution.py
+│
+├── outputs/
+│   └── v3_label_thresholds.json
+│
+├── app.py
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
+
+**Note:** The `data/`, `models/`, and large generated output files are excluded from GitHub to avoid uploading large datasets and model binaries.
+
+## Installation and Execution
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/harrisvizz/real-time-content-moderation.git
+cd real-time-content-moderation
+```
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```powershell
+venv\Scripts\activate
+```
+
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Start FastAPI
+### 4. Prepare model files
+
+The trained V3 model and ONNX model are not included in this GitHub repository because of their size.
+
+Before running the application, obtain the trained model artifacts and place them in the following locations:
+
+```text
+models/
+└── distilbert_toxicity_v3/
+
+outputs/
+├── v3_label_thresholds.json
+└── distilbert_toxicity_v3_onnx/
+    └── model.onnx
+```
+
+The V3 model directory must also contain the required tokenizer and model configuration files.
+
+### 5. Start the FastAPI backend
 
 ```bash
 python -m uvicorn src.api.main:app --reload
 ```
 
-### 3. Start Streamlit
+API documentation:
 
-Open another terminal:
+http://127.0.0.1:8000/docs
+
+### 6. Start the Streamlit frontend
+
+Open another terminal, activate the virtual environment, and run:
 
 ```bash
 python -m streamlit run app.py
 ```
 
-### 4. Open the application
+### 7. Open the application
 
 http://localhost:8501
 
-API documentation:
+## Moderation Decisions
 
-http://127.0.0.1:8000/docs
+The application returns toxicity scores and category-specific moderation decisions.
 
-## Project Limitations
+- **FLAGGED:** The category score meets or exceeds its configured threshold and requires moderation.
+- **HUMAN_REVIEW:** The category requires further review under the inference decision rules.
+- **NO_AUTOMATIC_FLAG:** No configured automatic moderation threshold was reached.
 
-- The model is a portfolio-scale prototype.
-- Rare toxicity categories need more evaluation data.
-- Predictions can contain false positives and false negatives.
-- Flagged comments should be reviewed by humans.
-- An unflagged comment is not guaranteed to be safe.
+A flagged comment is sent for review; it is not automatically deleted. An unflagged comment is not guaranteed to be safe.
+
+## Limitations
+
+- This is a portfolio-scale prototype trained for one epoch.
+- Rare toxicity categories require more representative training and evaluation examples.
+- Predictions may include false positives and false negatives.
+- The test dataset was reused for model comparisons.
+- The inference benchmark is a preliminary CPU measurement.
+- Production deployment would require additional security, monitoring, scalability, and fairness testing.
 
 ## Future Improvements
 
-- Improve rare-category detection.
-- Evaluate on an untouched external dataset.
+- Train with additional data and more epochs.
+- Improve detection of rare toxicity categories.
+- Evaluate against an untouched external dataset.
 - Add moderation history and analytics.
 - Deploy the application to a cloud platform.
-- Improve model performance and monitoring.
+- Introduce continuous model monitoring and feedback.
 
 ## Author
 
-AI/ML and Data Science Project
+**AI/ML and Data Science Portfolio Project**
+
+GitHub: [@harrisvizz](https://github.com/harrisvizz)
+
+---
+
+If you find this project interesting, feel free to explore the repository and its implementation.
